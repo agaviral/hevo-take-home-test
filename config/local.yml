@@ -1,0 +1,15 @@
+server:
+  type: simple
+  applicationContextPath: /origami
+  adminContextPath: /origami/admin
+  connector:
+    type: http
+    port: 8080
+
+logging:
+  level: INFO
+  loggers:
+    com.hevo:
+      level: TRACE
+  appenders:
+    - type: console
