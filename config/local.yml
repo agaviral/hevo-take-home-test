@@ -20,3 +20,6 @@ elasticSearchDb:
 
 s3Buckets:
   fileBucket: hevo-test-files
+
+s3ChangelogConsumer:
+  queueName: s3-file-info-changelog

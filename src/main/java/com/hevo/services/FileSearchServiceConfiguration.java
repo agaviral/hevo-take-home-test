@@ -2,6 +2,7 @@ package com.hevo.services;
 
 import com.hevo.services.client.es.ElasticSearchConfig;
 import com.hevo.services.client.s3.S3Buckets;
+import com.hevo.services.queue.SqsQueueConsumerConfig;
 import io.dropwizard.Configuration;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +24,8 @@ public class FileSearchServiceConfiguration extends Configuration {
     @Valid
     @NotNull
     private S3Buckets s3Buckets;
+
+    @Valid
+    @NotNull
+    private SqsQueueConsumerConfig s3ChangelogConsumer;
 }

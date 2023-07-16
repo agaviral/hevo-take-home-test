@@ -129,4 +129,8 @@ public class ElasticSearchClient {
 
         return response.shards().failed().intValue() == 0;
     }
+
+    public void delete(String id) throws IOException {
+        esClient.delete(r -> r.index(fileInfoIndex).id(id));
+    }
 }

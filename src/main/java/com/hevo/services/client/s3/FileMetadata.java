@@ -13,6 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class FileMetadata {
     private String key;
-    private String url;
+    private String bucket;
     private Date modifiedAt;
 }

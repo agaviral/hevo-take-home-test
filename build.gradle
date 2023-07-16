@@ -40,7 +40,7 @@ dependencies {
     // File parsing
     implementation 'org.apache.poi:poi:5.2.3'
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
-    implementation ('org.apache.tika:tika-core:2.8.0') {
+    implementation('org.apache.tika:tika-core:2.8.0') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     implementation 'org.apache.tika:tika-parser-pdf-module:2.8.0'

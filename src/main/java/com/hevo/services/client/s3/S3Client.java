@@ -7,12 +7,9 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.hevo.services.FileSearchServiceConfiguration;
-import org.eclipse.jetty.util.URIUtil;
 
 import javax.inject.Inject;
 import java.io.InputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +35,7 @@ public class S3Client {
         return summaries.stream()
                 .map(s -> FileMetadata.builder()
                         .key(s.getKey())
-                        .url(constructUrl(fileBucket, s.getKey()))
+                        .bucket(fileBucket)
                         .modifiedAt(s.getLastModified())
                         .build())
                 .collect(Collectors.toList());
@@ -47,10 +44,5 @@ public class S3Client {
     public InputStream readFile(String fileName) {
         S3Object object = s3client.getObject(fileBucket, fileName);
         return object.getObjectContent();
-    }
-
-    private String constructUrl(String fileBucket, String key) {
-        return String.format("https://%s.s3.ap-south-1.amazonaws.com/%s",
-                fileBucket, URIUtil.encodePath(key));
     }
 }
