@@ -54,12 +54,7 @@ public class ElasticSearchClient {
     public QueryFileIndexResponse queryFileInfo(String query, int limit, int offset) throws IOException {
         SearchResponse<FileInfoDocument> response = esClient.search(s -> s
                         .index(fileInfoIndex)
-                        .query(q -> q
-                                .match(t -> t
-                                        .field(FILE_CONTENT_COLUMN_NAME)
-                                        .query(query)
-                                )
-                        )
+                        .query(q -> q.multiMatch(m -> m.query(query)))
                         .size(limit)
                         .from(offset),
                 FileInfoDocument.class
