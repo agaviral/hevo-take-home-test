@@ -1,18 +1,17 @@
-package com.hevo.services.model;
+package com.hevo.services.client.s3;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileData {
+public class FileMetadata {
     private String url;
-    private String content;
-    private Instant modifiedAt;
+    private Date modifiedAt;
 }

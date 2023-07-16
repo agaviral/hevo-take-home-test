@@ -1,13 +1,16 @@
 package com.hevo.services.client.es;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.GetResponse;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.UpdateResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.endpoints.BooleanResponse;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hevo.services.FileSearchServiceConfiguration;
 import com.hevo.services.entity.FileInfoDocument;
 import org.apache.http.HttpHost;
@@ -17,20 +20,23 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
 public class ElasticSearchClient {
+    private static final String FILE_CONTENT_COLUMN_NAME = "content";
+
     private final ElasticsearchClient esClient;
     private final String fileInfoIndex;
 
     @Inject
-    public ElasticSearchClient(FileSearchServiceConfiguration configuration){
+    public ElasticSearchClient(FileSearchServiceConfiguration configuration, ObjectMapper objectMapper){
         RestClient restClient = RestClient
                 .builder(HttpHost.create(configuration.getElasticSearchDb().getHostname()))
                 .build();
         ElasticsearchTransport transport = new RestClientTransport(
-                restClient, new JacksonJsonpMapper());
+                restClient, new JacksonJsonpMapper(objectMapper));
 
         esClient = new ElasticsearchClient(transport);
         fileInfoIndex = configuration.getElasticSearchDb().getFileInfoIndex();
@@ -45,15 +51,17 @@ public class ElasticSearchClient {
      * @return all the files which contain the given query together with total files indexed
      * @throws IOException in case of an error communicating with ES
      */
-    public FileInfoSearchResponse queryFileInfo(String query, int limit, int offset) throws IOException {
+    public QueryFileIndexResponse queryFileInfo(String query, int limit, int offset) throws IOException {
         SearchResponse<FileInfoDocument> response = esClient.search(s -> s
                         .index(fileInfoIndex)
                         .query(q -> q
                                 .match(t -> t
-                                        .field("name")
+                                        .field(FILE_CONTENT_COLUMN_NAME)
                                         .query(query)
                                 )
-                        ),
+                        )
+                        .size(limit)
+                        .from(offset),
                 FileInfoDocument.class
         );
 
@@ -62,10 +70,31 @@ public class ElasticSearchClient {
                 .map(Hit::source)
                 .collect(Collectors.toList());
 
-        return FileInfoSearchResponse.builder()
+        return QueryFileIndexResponse.builder()
                 .files(result)
                 .totalNumberOfResults(total)
                 .build();
+    }
+
+
+    public Optional<GenericResponse<FileInfoDocument>> getFileInfo(String url) throws IOException {
+        BooleanResponse exists =
+                esClient.exists(r -> r.index(fileInfoIndex).id(url));
+        if (!exists.value()) {
+            return Optional.empty();
+        }
+
+        GetResponse<FileInfoDocument> response =
+                esClient.get(
+                        request -> request.index(fileInfoIndex).id(url),
+                        FileInfoDocument.class);
+
+        return Optional.of(
+                GenericResponse.<FileInfoDocument>builder()
+                        .primaryTerm(response.primaryTerm())
+                        .sequenceNumber(response.seqNo())
+                        .document(response.source())
+                        .build());
     }
 
     /**

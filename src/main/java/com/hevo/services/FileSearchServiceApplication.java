@@ -1,5 +1,6 @@
 package com.hevo.services;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -16,6 +17,9 @@ public class FileSearchServiceApplication extends Application<FileSearchServiceC
 
     @Override
     public void initialize(Bootstrap<FileSearchServiceConfiguration> bootstrap) {
+        bootstrap.getObjectMapper().findAndRegisterModules();
+        bootstrap.getObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
         GuiceBundle guiceBundle =
                 GuiceBundle.builder()
                         .enableAutoConfig(getClass().getPackage().getName())

@@ -24,7 +24,7 @@ public class S3Client {
         fileBucket = config.getS3Buckets().getFileBucket();
     }
 
-    public List<String> listFiles() {
+    public List<FileMetadata> listFiles() {
         ObjectListing listing = s3client.listObjects(fileBucket);
         List<S3ObjectSummary> summaries = listing.getObjectSummaries();
 
@@ -33,7 +33,14 @@ public class S3Client {
             summaries.addAll (listing.getObjectSummaries());
         }
 
-        return summaries.stream().map(S3ObjectSummary::getKey).collect(Collectors.toList());
+        S3ObjectSummary summary = null;
+        return summaries.stream()
+                .map(s -> FileMetadata.builder()
+                    .url(s.getKey())
+                    .modifiedAt(s.getLastModified())
+                    .build()
+                )
+                .collect(Collectors.toList());
     }
 
     public byte[] readFile(String fileName) throws IOException {
