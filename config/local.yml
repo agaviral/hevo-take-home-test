@@ -1,7 +1,7 @@
 server:
   type: simple
-  applicationContextPath: /origami
-  adminContextPath: /origami/admin
+  applicationContextPath: /file-indexer
+  adminContextPath: /file-indexer/admin
   connector:
     type: http
     port: 8080
@@ -13,3 +13,10 @@ logging:
       level: TRACE
   appenders:
     - type: console
+
+elasticSearchDb:
+  hostname: http://localhost:9200
+  fileInfoIndex: file-info
+
+s3Buckets:
+  fileBucket: hevo-test-files
