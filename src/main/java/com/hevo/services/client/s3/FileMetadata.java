@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileMetadata {
+    private String key;
     private String url;
     private Date modifiedAt;
 }

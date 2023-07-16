@@ -19,14 +19,14 @@ public class ElasticSearchRepository implements FileRepository {
     private final ElasticSearchClient elasticSearchClient;
 
     @Inject
-    public ElasticSearchRepository(ElasticSearchClient elasticSearchClient){
+    public ElasticSearchRepository(ElasticSearchClient elasticSearchClient) {
         this.elasticSearchClient = elasticSearchClient;
     }
 
     @Override
     public FileInfoSearchResponse searchFile(String query, int limit, int offset) {
         try {
-            QueryFileIndexResponse response =  elasticSearchClient.queryFileInfo(query, limit, offset);
+            QueryFileIndexResponse response = elasticSearchClient.queryFileInfo(query, limit, offset);
             return FileInfoSearchResponse.builder()
                     .fileInfoList(response.getFiles().stream()
                             .map(f -> FileInfo.builder()

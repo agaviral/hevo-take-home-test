@@ -6,11 +6,13 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.amazonaws.util.IOUtils;
 import com.hevo.services.FileSearchServiceConfiguration;
+import org.eclipse.jetty.util.URIUtil;
 
 import javax.inject.Inject;
-import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,22 +31,26 @@ public class S3Client {
         List<S3ObjectSummary> summaries = listing.getObjectSummaries();
 
         while (listing.isTruncated()) {
-            listing = s3client.listNextBatchOfObjects (listing);
-            summaries.addAll (listing.getObjectSummaries());
+            listing = s3client.listNextBatchOfObjects(listing);
+            summaries.addAll(listing.getObjectSummaries());
         }
 
-        S3ObjectSummary summary = null;
         return summaries.stream()
                 .map(s -> FileMetadata.builder()
-                    .url(s.getKey())
-                    .modifiedAt(s.getLastModified())
-                    .build()
-                )
+                        .key(s.getKey())
+                        .url(constructUrl(fileBucket, s.getKey()))
+                        .modifiedAt(s.getLastModified())
+                        .build())
                 .collect(Collectors.toList());
     }
 
-    public byte[] readFile(String fileName) throws IOException {
+    public InputStream readFile(String fileName) {
         S3Object object = s3client.getObject(fileBucket, fileName);
-        return IOUtils.toByteArray(object.getObjectContent());
+        return object.getObjectContent();
+    }
+
+    private String constructUrl(String fileBucket, String key) {
+        return String.format("https://%s.s3.ap-south-1.amazonaws.com/%s",
+                fileBucket, URIUtil.encodePath(key));
     }
 }

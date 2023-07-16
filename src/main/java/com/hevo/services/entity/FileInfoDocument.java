@@ -6,7 +6,6 @@ import com.hevo.services.model.FileData;
 import lombok.*;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,10 +24,10 @@ public class FileInfoDocument {
     private Instant modifiedAt;
 
     public static FileInfoDocument from(FileData fileData) {
-            return FileInfoDocument.builder()
-                    .url(fileData.getUrl())
-                    .content(fileData.getContent())
-                    .modifiedAt(fileData.getModifiedAt())
-                    .build();
+        return FileInfoDocument.builder()
+                .url(fileData.getUrl())
+                .content(fileData.getContent())
+                .modifiedAt(fileData.getModifiedAt())
+                .build();
     }
 }

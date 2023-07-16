@@ -8,11 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -28,30 +26,26 @@ public class SearchResource {
     @Path("/search")
     public SearchResponse searchFile(
             @QueryParam("q") @NotEmpty String query,
-            @QueryParam("limit") @DefaultValue("10")  @Min(1) @Max(10) int limit,
+            @QueryParam("limit") @DefaultValue("10") @Min(1) @Max(10) int limit,
             @DefaultValue("0") @QueryParam("offset") @Min(0) int offset) throws JsonProcessingException {
         return searchService.search(query);
     }
 }
 
 /**
-
- curl -X PUT "localhost:9200/file-info?pretty" -H 'Content-Type: application/json' -d'
- {
-     "mappings": {
-         "properties": {
-             "url": {
-                 "type": "text"
-             },
-             "content": {
-                 "type": "text",
-                 "store": false
-             }
-         }
-     }
- }
- '
-
-
-
+ * curl -X PUT "localhost:9200/file-info?pretty" -H 'Content-Type: application/json' -d'
+ * {
+ * "mappings": {
+ * "properties": {
+ * "url": {
+ * "type": "text"
+ * },
+ * "content": {
+ * "type": "text",
+ * "store": false
+ * }
+ * }
+ * }
+ * }
+ * '
  */

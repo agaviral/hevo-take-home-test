@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-@FileParserRegistry(extension = "txt")
-public class TextFileParser implements FileParser {
+@FileParserRegistry(extension = "csv")
+public class CsvFileParser implements FileParser {
 
     @Override
     public String getContent(InputStream is) throws IOException {

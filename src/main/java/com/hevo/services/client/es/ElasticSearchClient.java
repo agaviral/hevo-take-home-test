@@ -31,7 +31,7 @@ public class ElasticSearchClient {
     private final String fileInfoIndex;
 
     @Inject
-    public ElasticSearchClient(FileSearchServiceConfiguration configuration, ObjectMapper objectMapper){
+    public ElasticSearchClient(FileSearchServiceConfiguration configuration, ObjectMapper objectMapper) {
         RestClient restClient = RestClient
                 .builder(HttpHost.create(configuration.getElasticSearchDb().getHostname()))
                 .build();
@@ -45,8 +45,9 @@ public class ElasticSearchClient {
     /**
      * Queries the file info index and return the list of file info documents found.
      * Also returns the total number of file info document matching the query
-     * @param query the term which is being search for in the file
-     * @param limit the number of file documents which should be returned
+     *
+     * @param query  the term which is being search for in the file
+     * @param limit  the number of file documents which should be returned
      * @param offset the offset from which the documents should be read
      * @return all the files which contain the given query together with total files indexed
      * @throws IOException in case of an error communicating with ES
@@ -109,8 +110,8 @@ public class ElasticSearchClient {
      * Update the file info document given a primary term and sequence number.
      * This ensures optimistic locking.
      *
-     * @param document the document we want to update
-     * @param primaryTerm the primary term we got when querying for it
+     * @param document       the document we want to update
+     * @param primaryTerm    the primary term we got when querying for it
      * @param sequenceNumber the sequence number we got when querying for it
      * @return true if the document was update, false otherwise
      * @throws IOException in case of an error when communicating with ES

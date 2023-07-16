@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.time.Instant;
 import java.util.List;
@@ -26,7 +27,8 @@ public class BackfillFileIndex extends Task {
     private final FileParserSelector fileParserSelector;
 
     @Inject
-    public BackfillFileIndex(String name, FileRepository fileRepository, S3Client s3Client, FileParserSelector fileParserSelector) {
+    public BackfillFileIndex(String name, FileRepository fileRepository, S3Client s3Client,
+                             FileParserSelector fileParserSelector) {
         super("backfill-file-index");
         this.fileRepository = fileRepository;
         this.s3Client = s3Client;
@@ -36,24 +38,26 @@ public class BackfillFileIndex extends Task {
     @Override
     public void execute(Map<String, List<String>> parameters, PrintWriter output) throws Exception {
         List<FileMetadata> allFiles = s3Client.listFiles();
-        for(FileMetadata file: allFiles){
+        for (FileMetadata file : allFiles) {
             String content = "";
-            try {
-                byte[] fileData = s3Client.readFile(file.getUrl());
-                FileParser parser = fileParserSelector.getFileParser(file.getUrl());
+            try (InputStream fileData = s3Client.readFile(file.getKey())) {
+                FileParser parser = fileParserSelector.getFileParser(file.getKey());
                 content = parser.getContent(fileData);
-            } catch (IOException | ParserNotFoundException e){
-                // just ignore the file if no parser was found for it or it cannot be read from AWS
+            } catch (IOException | ParserNotFoundException e) {
+                // just ignore the file if
+                // - no parser was found for it
+                // - it cannot be read from AWS
+                // - parser throws an exception parsing it
                 log.error("Error parsing file: " + file.getUrl());
                 continue;
             }
 
             fileRepository.upsertFile(
                     FileData.builder()
-                    .url(file.getUrl())
-                    .modifiedAt(Instant.ofEpochMilli(file.getModifiedAt().getTime()))
-                    .content(content)
-                    .build()
+                            .url(file.getUrl())
+                            .modifiedAt(Instant.ofEpochMilli(file.getModifiedAt().getTime()))
+                            .content(content)
+                            .build()
             );
         }
     }

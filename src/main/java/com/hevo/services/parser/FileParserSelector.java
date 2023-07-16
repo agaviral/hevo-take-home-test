@@ -22,8 +22,8 @@ public class FileParserSelector {
         Reflections reflections = new Reflections(FileParserSelector.class.getPackageName());
         Set<Class<?>> parserClasses = reflections.getTypesAnnotatedWith(FileParserRegistry.class);
 
-        for(Class<?> parserClass : parserClasses){
-            if(FileParser.class.isAssignableFrom(parserClass)){
+        for (Class<?> parserClass : parserClasses) {
+            if (FileParser.class.isAssignableFrom(parserClass)) {
                 Class<? extends FileParser> fileParserClass = (Class<? extends FileParser>) parserClass;
                 String extension = parserClass.getAnnotation(FileParserRegistry.class).extension();
                 fileParserRegistry.put(extension, injector.getInstance(fileParserClass));
@@ -34,7 +34,7 @@ public class FileParserSelector {
     public FileParser getFileParser(String fileName) throws ParserNotFoundException {
         String extension = Files.getFileExtension(fileName);
         log.debug("Got file with name: " + fileName + " and extension: " + extension);
-        if(fileParserRegistry.containsKey(extension)){
+        if (fileParserRegistry.containsKey(extension)) {
             return fileParserRegistry.get(extension);
         }
         throw new ParserNotFoundException();
