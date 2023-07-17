@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class ElasticSearchClient {
-    private static final String FILE_CONTENT_COLUMN_NAME = "content";
-
     private final ElasticsearchClient esClient;
     private final String fileInfoIndex;
 
