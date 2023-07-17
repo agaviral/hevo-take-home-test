@@ -77,7 +77,7 @@ $ ./gradlew shadowJar
 3. Start the server
 
 ```shell
-$ java -jar ./build/libs/hevo-take-home-test-0.0.1-all.jar server config/development.yml
+$ java -jar ./build/libs/hevo-take-home-test-0.0.1-all.jar server config/local.yml
 ```
 
 4. This starts an HTTP server at http://localhost:8080
