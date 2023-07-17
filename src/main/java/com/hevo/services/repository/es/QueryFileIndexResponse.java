@@ -1,4 +1,4 @@
-package com.hevo.services.client.es;
+package com.hevo.services.repository.es;
 
 import com.hevo.services.entity.FileInfoDocument;
 import lombok.AllArgsConstructor;

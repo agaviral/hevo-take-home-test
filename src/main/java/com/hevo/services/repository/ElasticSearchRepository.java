@@ -1,10 +1,10 @@
 package com.hevo.services.repository;
 
-import com.hevo.services.client.es.ElasticSearchClient;
-import com.hevo.services.client.es.GenericResponse;
-import com.hevo.services.client.es.QueryFileIndexResponse;
 import com.hevo.services.entity.FileInfoDocument;
 import com.hevo.services.model.FileData;
+import com.hevo.services.repository.es.ElasticSearchClient;
+import com.hevo.services.repository.es.GenericResponse;
+import com.hevo.services.repository.es.QueryFileIndexResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;

@@ -1,8 +1,8 @@
 package com.hevo.services;
 
-import com.hevo.services.client.es.ElasticSearchConfig;
-import com.hevo.services.client.s3.S3Buckets;
+import com.hevo.services.datasource.s3.S3Buckets;
 import com.hevo.services.queue.SqsQueueConsumerConfig;
+import com.hevo.services.repository.es.ElasticSearchConfig;
 import io.dropwizard.Configuration;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.hevo.services.service;
 
-import com.hevo.services.client.s3.S3Client;
+import com.hevo.services.datasource.Datasource;
 import com.hevo.services.model.FileData;
 import com.hevo.services.model.FileInfo;
 import com.hevo.services.parser.FileParser;
@@ -25,7 +25,7 @@ public class DefaultSearchService implements SearchService {
     FileRepository fileRepository;
 
     @Inject
-    S3Client s3Client;
+    Datasource datasource;
 
     @Inject
     FileParserSelector fileParserSelector;
@@ -43,12 +43,13 @@ public class DefaultSearchService implements SearchService {
         List<SearchResponse.FileInfo> result = response.getFileInfoList().stream()
                 .map(f -> SearchResponse.FileInfo.builder()
                         .url(f.getUrl())
-                        .modifiedAt(f.getModifiedAt())
+                        .modifiedAt(f.getModifiedAt().toString())
                         .build())
                 .toList();
 
         return SearchResponse.builder()
                 .files(result)
+                .numResults(result.size())
                 .totalNumberOfResults(response.getTotalNumberOfResults())
                 .build();
     }
@@ -56,7 +57,7 @@ public class DefaultSearchService implements SearchService {
     @Override
     public void readFromS3AndIndex(FileInfo file) throws IOException {
         String content = "";
-        try (InputStream fileData = s3Client.readFile(file.getKey())) {
+        try (InputStream fileData = datasource.readFile(file.getKey())) {
             FileParser parser = fileParserSelector.getFileParser(file.getKey());
             content = parser.getContent(fileData);
         } catch (IOException | ParserNotFoundException e) {

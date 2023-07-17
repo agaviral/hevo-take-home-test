@@ -1,7 +1,7 @@
 package com.hevo.services.task;
 
-import com.hevo.services.client.s3.FileMetadata;
-import com.hevo.services.client.s3.S3Client;
+import com.hevo.services.datasource.Datasource;
+import com.hevo.services.datasource.FileMetadata;
 import com.hevo.services.model.FileInfo;
 import com.hevo.services.service.SearchService;
 import io.dropwizard.servlets.tasks.Task;
@@ -18,19 +18,19 @@ import java.util.Map;
 @Slf4j
 @Singleton
 public class BackfillFilendex extends Task {
-    private final S3Client s3Client;
+    private final Datasource datasource;
     private final SearchService searchService;
 
     @Inject
-    public BackfillFilendex(String name, S3Client s3Client, SearchService searchService) {
+    public BackfillFilendex(String name, Datasource datasource, SearchService searchService) {
         super("backfill-file-index");
-        this.s3Client = s3Client;
+        this.datasource = datasource;
         this.searchService = searchService;
     }
 
     @Override
     public void execute(Map<String, List<String>> parameters, PrintWriter output) throws Exception {
-        List<FileMetadata> allFiles = s3Client.listFiles();
+        List<FileMetadata> allFiles = datasource.listFiles();
         for (FileMetadata file : allFiles) {
             try {
                 searchService.readFromS3AndIndex(new FileInfo(file.getBucket(), file.getKey(),

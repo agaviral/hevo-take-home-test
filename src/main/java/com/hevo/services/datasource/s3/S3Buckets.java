@@ -1,4 +1,4 @@
-package com.hevo.services.client.s3;
+package com.hevo.services.datasource.s3;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

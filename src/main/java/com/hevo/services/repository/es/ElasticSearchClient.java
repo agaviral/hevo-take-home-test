@@ -1,4 +1,4 @@
-package com.hevo.services.client.es;
+package com.hevo.services.repository.es;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.GetResponse;

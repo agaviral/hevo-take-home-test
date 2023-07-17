@@ -23,6 +23,6 @@ public class SearchResponse {
     @AllArgsConstructor
     public static class FileInfo {
         private String url;
-        private Instant modifiedAt;
+        private String modifiedAt;
     }
 }
