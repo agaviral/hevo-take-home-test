@@ -20,6 +20,7 @@ public class FileSearchServiceApplication extends Application<FileSearchServiceC
 
     @Override
     public void run(FileSearchServiceConfiguration configuration, Environment environment) throws Exception {
+        // Initialise and add Sqs consumer for S3 Changelog.
         Injector injector = guiceBundle.getInjector();
         S3ChangelogHandler s3ChangelogHandler = injector.getInstance(S3ChangelogHandler.class);
         environment

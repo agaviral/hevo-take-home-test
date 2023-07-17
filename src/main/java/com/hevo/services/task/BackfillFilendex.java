@@ -15,6 +15,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Admin task which helps in backfilling the index.
+ * Reads all the files from the datasource and upserts them into the index.
+ */
 @Slf4j
 @Singleton
 public class BackfillFilendex extends Task {
@@ -33,7 +37,7 @@ public class BackfillFilendex extends Task {
         List<FileMetadata> allFiles = datasource.listFiles();
         for (FileMetadata file : allFiles) {
             try {
-                searchService.readFromS3AndIndex(new FileInfo(file.getBucket(), file.getKey(),
+                searchService.readFromDatasourceAndIndex(new FileInfo(file.getBucket(), file.getKey(),
                         Instant.ofEpochMilli(file.getModifiedAt().getTime())));
             } catch (IOException e) {
                 // just ignore the file if not able to index it

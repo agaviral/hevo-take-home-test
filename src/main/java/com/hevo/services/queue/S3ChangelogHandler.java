@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 
+/**
+ * A simple handler which inserts or deletes file from the index given a S3 message.
+ */
 @Slf4j
 public class S3ChangelogHandler implements Handler<S3ChangelogEvent> {
     private static final String S3EVENT_CREATE_PREFIX = "ObjectCreated";
@@ -23,7 +26,7 @@ public class S3ChangelogHandler implements Handler<S3ChangelogEvent> {
         for (S3ChangelogEvent.Record record : message.getRecords()) {
             if (record.getEventName().startsWith(S3EVENT_CREATE_PREFIX)) {
                 FileInfo fileInfo = createFileMetadata(record);
-                searchService.readFromS3AndIndex(fileInfo);
+                searchService.readFromDatasourceAndIndex(fileInfo);
             }
 
             if (record.getEventName().startsWith(S3EVENT_REMOVE_PREFIX)) {

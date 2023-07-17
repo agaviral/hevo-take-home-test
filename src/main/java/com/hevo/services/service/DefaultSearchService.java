@@ -31,10 +31,10 @@ public class DefaultSearchService implements SearchService {
     FileParserSelector fileParserSelector;
 
     @Override
-    public SearchResponse search(String query) {
+    public SearchResponse search(String query, int limit, int offset) {
         FileInfoSearchResponse response = null;
         try {
-            response = fileRepository.searchFile(query, 10, 0);
+            response = fileRepository.searchFile(query, limit, offset);
         } catch (IOException e) {
             log.error("Unable to search index", e);
             throw new InternalServerErrorException("Unable to search index");
@@ -55,7 +55,7 @@ public class DefaultSearchService implements SearchService {
     }
 
     @Override
-    public void readFromS3AndIndex(FileInfo file) throws IOException {
+    public void readFromDatasourceAndIndex(FileInfo file) throws IOException {
         String content = "";
         try (InputStream fileData = datasource.readFile(file.getKey())) {
             FileParser parser = fileParserSelector.getFileParser(file.getKey());

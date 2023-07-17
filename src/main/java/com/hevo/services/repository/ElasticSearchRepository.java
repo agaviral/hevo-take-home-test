@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Elastic search backed implementation of the FileRepository
+ */
 @Slf4j
 public class ElasticSearchRepository implements FileRepository {
     private final ElasticSearchClient elasticSearchClient;

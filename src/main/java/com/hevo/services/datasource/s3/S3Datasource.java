@@ -15,6 +15,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of datasource for S3
+ */
 public class S3Datasource implements Datasource {
     private final AmazonS3 s3client;
     private final String fileBucket;

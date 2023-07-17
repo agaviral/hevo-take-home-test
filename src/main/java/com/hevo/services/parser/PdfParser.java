@@ -15,6 +15,7 @@ import java.io.InputStream;
 @FileParserRegistry(extension = "pdf")
 public class PdfParser implements FileParser {
 
+
     @Override
     public String getContent(InputStream is) throws IOException {
         BodyContentHandler handler = new BodyContentHandler();

@@ -13,6 +13,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A simple consumer which start `n` `SqsListener` to consume messages.
+ *
+ * @param <T>
+ */
 @Slf4j
 public class SqsConsumer<T> implements Managed {
     private final ScheduledExecutorService scheduledExecutorService;

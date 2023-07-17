@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Helper class which selects the right parser according to the extension of the file.
+ * Maintains a registry of parsers.
+ */
 @Slf4j
 @Singleton
 public class FileParserSelector {

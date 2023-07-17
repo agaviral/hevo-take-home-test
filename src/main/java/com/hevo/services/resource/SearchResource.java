@@ -28,7 +28,7 @@ public class SearchResource {
             @QueryParam("q") @NotEmpty String query,
             @QueryParam("limit") @DefaultValue("10") @Min(1) @Max(10) int limit,
             @DefaultValue("0") @QueryParam("offset") @Min(0) int offset) throws JsonProcessingException {
-        return searchService.search(query);
+        return searchService.search(query, limit, offset);
     }
 }
 
